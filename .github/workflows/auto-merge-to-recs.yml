@@ -44,7 +44,8 @@ jobs:
         run: |
           branch="${{ steps.get_branch.outputs.branch }}"
           if [ -n "$branch" ]; then
+            git checkout -b develop_urp origin/develop_urp
             git checkout -b "$branch" "origin/$branch"
-            git merge --no-edit origin/develop_urp
+            git merge --no-edit develop_urp
             git push origin "$branch"
           fi
