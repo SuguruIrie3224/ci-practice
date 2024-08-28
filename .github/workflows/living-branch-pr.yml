@@ -12,6 +12,11 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0 # 全履歴を取得
+
+      - name: Setup git
+        run: |
+          git config --global user.name 'SuguruIrie3224'
+          git config --global user.email '121938178+SuguruIrie3224@users.noreply.github.com'
       
       # プルリクエスト用のブランチを作成してチェックアウト
       - name: Create and checkout PR branch
