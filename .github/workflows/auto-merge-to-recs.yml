@@ -12,10 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: recs
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Setup git
         run: |
@@ -47,6 +45,6 @@ jobs:
           branch="${{ steps.get_branch.outputs.branch }}"
           if [ -n "$branch" ]; then
             git checkout -b "$branch" "origin/$branch"
-            git merge --no-edit origin/develop_urp
+            git merge --no-edit develop_urp
             git push origin "$branch"
           fi
