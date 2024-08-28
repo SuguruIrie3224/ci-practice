@@ -1,0 +1,22 @@
+name: Tracking Models
+
+on:
+  push:
+    branches:
+      - develop_urp
+    paths:
+      - 'models/**'
+      
+jobs:
+  tracking_models:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 特定ディレクトリで変更、追加、削除があったファイルを取得、ここではmodelsディレクトリ
+      - name: Get changed files
+        id: get_changed_files
+        run: |
+          echo "::set-output name=files::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^models/')"
