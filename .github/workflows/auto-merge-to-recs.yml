@@ -2,10 +2,13 @@ name: Auto Merge to recs
 
 on:
   # スケジュール実行
-  schedule:
-    - cron: '0 * * * *'
+  # schedule:
+  #   - cron: '0 * * * *'
   # 手動実行
   workflow_dispatch:
+  push:
+    branches:
+      - develop_urp
 
 jobs:
   auto_merge_to_recs:
