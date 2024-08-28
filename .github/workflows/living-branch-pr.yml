@@ -1,0 +1,35 @@
+name: Living Branch PR
+
+on:
+  workflow_dispatch:
+
+jobs:
+  living_branch_pr:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # 全履歴を取得
+      
+      # プルリクエスト用のブランチを作成してチェックアウト
+      - name: Create and checkout PR branch
+        run: |
+          git checkout -b living-branch-pr
+          git push origin living-branch-pr
+          git branch --set-upstream-to=origin/living-branch-pr living-branch-pr
+
+      # ブランチを取得して、一覧をファイルに保存してコミット
+      - name: Get branches
+        run: |
+          git fetch origin 'refs/heads/*:refs/remotes/origin/*'
+          git branch -r | grep 'origin/' | sed -e 's/origin\///g' > branches.txt
+          git add branches.txt
+          git commit -m "Update branches.txt"
+          git push origin HEAD
+      
+      # プルリクエストを作成
+      - name: Create pull request
+        run: |
+          gh pr create --base develop_urp --head living-branch-pr --title "Living Branch PR" --body "This is a living branch PR."
