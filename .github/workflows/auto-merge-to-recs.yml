@@ -1,0 +1,52 @@
+name: Auto Merge to recs
+
+on:
+  # スケジュール実行
+  schedule:
+    - cron: '0 * * * *'
+  # 手動実行
+  workflow_dispatch:
+
+jobs:
+  auto_merge_to_recs:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: recs
+
+      - name: Setup git
+        run: |
+          git config --global user.name 'SuguruIrie3224'
+          git config --global user.email '121938178+SuguruIrie3224@users.noreply.github.com'
+
+      # rec/*で始まるブランチを取得
+      - name: Get branch derived from recs
+        run: |
+          git fetch origin 'refs/heads/rec/*:refs/remotes/origin/rec/*'
+          echo "::set-output name=branches::$(git branch -r | grep 'origin/rec/' | sed -e 's/origin\///g')"
+        id: get_branches
+
+      # 最終コミットが1日以内のブランチを取得
+      - name: Get branch updated within 1 day
+        run: |
+          branches=($(echo "${{ steps.get_branches.outputs.branches }}" | tr ' ' '\n'))
+          for branch in "${branches[@]}"; do
+            if [ -n "$(git log -1 --since='1 day ago' --pretty=format:"%H" "origin/$branch")" ]; then
+              echo "::set-output name=branch::$branch"
+              break
+            fi
+          done
+        id: get_branch
+
+      # 取得したブランチにdevelop_urpをマージ
+      - name: Merge develop_urp
+        run: |
+          branch="${{ steps.get_branch.outputs.branch }}"
+          if [ -n "$branch" ]; then
+            git checkout -b "$branch" "origin/$branch"
+            git merge --no-edit origin/develop_urp
+            git push origin "$branch"
+          fi
