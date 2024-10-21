@@ -5,7 +5,7 @@ on:
 
 jobs:
   living_branch_pr:
-    runs-on: ubuntu-latest
+    runs-on: TA0259-N1
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
