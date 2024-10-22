@@ -20,7 +20,7 @@ jobs:
     # プルリクエストからイシュー番号を取得（PowerShell用に修正）
     - name: Extract Issue Number from PR Description
       id: extract_issue
-      shell: pwsh  # PowerShellを指定
+      # shell: pwsh  # PowerShellを指定
       run: |
         $issueNumber = ($env:GITHUB_EVENT_PULL_REQUEST_BODY | Select-String -Pattern '#(\d+)' | ForEach-Object { $_.Matches.Groups[1].Value })
         if (-not $issueNumber) {
