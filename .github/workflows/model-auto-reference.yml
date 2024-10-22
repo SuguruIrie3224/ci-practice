@@ -12,17 +12,13 @@ jobs:
     # リポジトリのチェックアウト
     - name: Checkout repository
       uses: actions/checkout@v3
-
-    # echoコマンドを実行
-    - name: Execute echo command
-      run: echo "Hello, this is a command execution on self-hosted runner!"
     
     # 画像をアーティファクトとしてアップロード
     - name: Upload Image Artifact
       uses: actions/upload-artifact@v4
       with:
         name: pr-image-artifact
-        path: "C:\\artifacts\\hoge3.webp"  # セルフホステッドランナー上の画像のパスを指定
+        path: "C:\\artifacts\\*.mp4"  # 特定ディレクトリ内の画像と動画をアップロード
 
     # アーティファクトのダウンロードリンクを作成して、イシューにコメントを投稿
     - name: Post image link to linked issue
@@ -30,7 +26,10 @@ jobs:
       with:
         issue-number: ${{ github.event.pull_request.number }}
         body: |
-          The image has been uploaded as an artifact. You can download it from the following link:
-
+          The image artifact is available for download.
           [Download Image Artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
         token: ${{ secrets.GITHUB_TOKEN }}
+
+    # ディレクトリの中を削除
+    - name: Remove artifacts
+      run: Remove-Item -Path "C:\\artifacts\\*.mp4" -Recurse -Force
