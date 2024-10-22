@@ -16,18 +16,12 @@ jobs:
     # echoコマンドを実行
     - name: Execute echo command
       run: echo "Hello, this is a command execution on self-hosted runner!"
-
+    
     # プルリクエストからイシュー番号を取得（PowerShell用に修正）
     - name: Extract Issue Number from PR Description
       id: extract_issue
       run: |
-        $issueNumber = ($env:GITHUB_EVENT_PULL_REQUEST_BODY | Select-String -Pattern '#(\d+)' | ForEach-Object { $_.Matches.Groups[1].Value })
-        if (-not $issueNumber) {
-          Write-Host "No issue number found in the pull request description."
-          exit 1
-        }
-        Write-Host "Issue number found: $issueNumber"
-        echo "issue_number=$issueNumber" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo ${{ github.event.pull_request.head.ref}} 
 
     # 画像をアーティファクトとしてアップロード
     - name: Upload Image Artifact
