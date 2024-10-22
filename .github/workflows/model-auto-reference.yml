@@ -36,7 +36,8 @@ jobs:
 
     # Unityの指定のディレクトリに動画ができるので、それを指定のディレクトリに移動(G:/...)
     - name: Move artifacts
-      run: Move-Item -Path "C:\Users\suguru irie\ProjectBlueArchive\Recordings\*.mp4" -Destination "G:\マイドライブ\Share" -Force
+    - shell: cmd
+      run: mv "C:\Users\suguru irie\ProjectBlueArchive\Recordings\*.mp4" "G:\マイドライブ\Share"
 
     # Unity内の動画を削除
     - name: Remove artifacts
