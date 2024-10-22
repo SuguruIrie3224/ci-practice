@@ -17,11 +17,9 @@ jobs:
     - name: Execute echo command
       run: echo "Hello, this is a command execution on self-hosted runner!"
     
-    # # プルリクエストからイシュー番号を取得（PowerShell用に修正）
-    # - name: Extract Issue Number from PR Description
-    #   id: extract_issue
-    #   run: |
-    #     echo "${{ github.event.pull_request.head.ref}}" 
+    # プルリクエストの番号を取得
+    - name: Get PR number
+      run: echo "issue_number=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
 
     # 画像をアーティファクトとしてアップロード
     - name: Upload Image Artifact
