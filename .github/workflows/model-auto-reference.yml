@@ -26,11 +26,11 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: pr-image-artifact
-        path: "C:\\artifacts\\hoge2.webp"  # セルフホステッドランナー上の画像のパスを指定
+        path: "C:\\artifacts\\hoge3.webp"  # セルフホステッドランナー上の画像のパスを指定
 
     # アーティファクトのダウンロードリンクを作成して、イシューにコメントを投稿
     - name: Post image link to linked issue
-      uses: peter-evans/create-or-update-comment@v3
+      uses: peter-evans/create-or-update-comment@v4
       with:
         issue-number: ${{ env.issue_number }}
         body: |
