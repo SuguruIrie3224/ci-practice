@@ -21,7 +21,7 @@ jobs:
     - name: Extract Issue Number from PR Description
       id: extract_issue
       run: |
-        echo ${{ github.event.pull_request.head.ref}} 
+        echo "${{ github.event.pull_request.head.ref}}" 
 
     # 画像をアーティファクトとしてアップロード
     - name: Upload Image Artifact
