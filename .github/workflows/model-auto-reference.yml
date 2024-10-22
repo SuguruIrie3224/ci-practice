@@ -1,0 +1,47 @@
+name: Post Image to Linked Issue
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  post_image_to_issue:
+    runs-on: self-hosted  # セルフホステッドランナーで実行
+
+    steps:
+    # リポジトリのチェックアウト
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # echoコマンドを実行
+    - name: Execute echo command
+      run: echo "Hello, this is a command execution on self-hosted runner!"
+
+    # プルリクエストからイシュー番号を取得
+    - name: Extract Issue Number from PR Description
+      id: extract_issue
+      run: |
+        ISSUE_NUMBER=$(echo "${{ github.event.pull_request.body }}" | grep -oP '#\K\d+')
+        if [ -z "$ISSUE_NUMBER" ]; then
+          echo "No issue number found in the pull request description."
+          exit 1
+        fi
+        echo "issue_number=$ISSUE_NUMBER" >> $GITHUB_ENV
+
+    # 画像をアーティファクトとしてアップロード
+    - name: Upload Image Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: pr-image-artifact
+        path: "C:\\artifacts\\hoge.webp"  # セルフホステッドランナー上の画像のパスを指定
+
+    # アーティファクトのダウンロードリンクを作成して、イシューにコメントを投稿
+    - name: Post image link to linked issue
+      uses: peter-evans/create-or-update-comment@v3
+      with:
+        issue-number: ${{ env.issue_number }}
+        body: |
+          The image has been uploaded as an artifact. You can download it from the following link:
+
+          [Download Image Artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+        token: ${{ secrets.GITHUB_TOKEN }}
