@@ -17,10 +17,6 @@ jobs:
     - name: Execute echo command
       run: echo "Hello, this is a command execution on self-hosted runner!"
     
-    # プルリクエストの番号を取得
-    - name: Get PR number
-      run: echo "issue_number=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
-
     # 画像をアーティファクトとしてアップロード
     - name: Upload Image Artifact
       uses: actions/upload-artifact@v4
@@ -32,7 +28,7 @@ jobs:
     - name: Post image link to linked issue
       uses: peter-evans/create-or-update-comment@v4
       with:
-        issue-number: ${{ env.issue_number }}
+        issue-number: ${{ github.event.pull_request.number }}
         body: |
           The image has been uploaded as an artifact. You can download it from the following link:
 
