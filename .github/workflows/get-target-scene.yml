@@ -18,7 +18,7 @@ jobs:
       id: get_target_directory
       run: |
 
-        $TARGET_DIRECTORY = git diff --name-only origin/develop ${{ github.head_ref }} | Select-String -Pattern 'Assets/Resources/Characters|Assets/Resources/Props' | ForEach-Object { Split-Path $_.Line }
+        $TARGET_DIRECTORY = git diff origin/develop...${{ github.head_ref }} --name-only | Select-String -Pattern 'Assets/Resources/Characters|Assets/Resources/Props' | ForEach-Object { Split-Path $_.Line }
 
         if (-not $TARGET_DIRECTORY) {
             Write-Host "No directory found in the modified or added files."
