@@ -42,8 +42,12 @@ jobs:
       run: |
         $changed_directories = $env:changed_directories
         foreach ($directory in $changed_directories) {
-            echo "Assets/Resources/Characters/BlueArchive/$directory/Scenes/SetupScene.unity"
+            .github/auto-record.ps1 "Assets/Resources/Characters/BlueArchive/$directory/Scenes/SetupScene.unity"
         }
+
+    # 書き出したファイルの移動
+    - name: Move artifacts
+      run: .github/move-ref.ps1 ${{ github.event.pull_request.number }}
 
     # プルリクエストに変更/追加されたディレクトリをコメント
     - name: Comment on pull request
@@ -52,5 +56,5 @@ jobs:
         issue-number: ${{ github.event.pull_request.number }}
         body: |
           The following directories have been modified or added in this pull request:
-          ${{ env.changed_directories }}
+          "G:\\マイドライブ\\Share\\${{ github.event.pull_request.number }}"
         token: ${{ secrets.GITHUB_TOKEN }}
