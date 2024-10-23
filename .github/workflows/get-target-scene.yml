@@ -37,6 +37,14 @@ jobs:
         $changed_directories = $changed_directories | Sort-Object -Unique
         Add-Content -Path $env:GITHUB_ENV -Value "changed_directories=$changed_directories"
 
+    # Unityエディタ再生を実行するシーンのパスを取得
+    - name: Execute Unity Editor Play
+      run: |
+        $changed_directories = $env:changed_directories
+        foreach ($directory in $changed_directories) {
+            echo "Assets/Resources/Characters/BlueArchive/$directory/Scenes/SetupScene.unity"
+        }
+
     # プルリクエストに変更/追加されたディレクトリをコメント
     - name: Comment on pull request
       uses: peter-evans/create-or-update-comment@v3
