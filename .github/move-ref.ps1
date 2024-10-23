@@ -1,2 +1,2 @@
-$PSDefaultParameterValues['*:Encording'] = 'utf8'
-Copy-Item -Path "C:\\Users\\suguru irie\\ProjectBlueArchive\\Recordings\\*.mp4" -Destination "G:\\繝槭う繝峨Λ繧､繝暴\Share\\"
+# $PSDefaultParameterValues['*:Encording'] = 'utf8'
+Copy-Item -Path "C:\\Users\\suguru irie\\ProjectBlueArchive\\Recordings\\*.mp4" -Destination "G:\\マイドライブ\\Share\\"
