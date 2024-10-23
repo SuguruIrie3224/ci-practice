@@ -1,0 +1,39 @@
+name: Get modified or added directory
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  get_target_scene:
+    runs-on: self-hosted
+
+    steps:
+    # リポジトリのチェックアウト
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # 変更されたまたは追加された、Assets/Resources/CharactersかAssets/Resources/Props以下のディレクトリを取得
+    - name: Get modified or added directory
+      id: get_target_directory
+      run: |
+        $TARGET_DIRECTORY = git diff --name-only $env:GITHUB_EVENT_BEFORE $env:GITHUB_SHA | Select-String -Pattern 'Assets/Resources/Characters|Assets/Resources/Props' | ForEach-Object { Split-Path $_.Line }
+
+        if (-not $TARGET_DIRECTORY) {
+            Write-Host "No directory found in the modified or added files."
+            exit 1
+        }
+
+        $env:TARGET_DIRECTORY = $TARGET_DIRECTORY
+        Add-Content -Path $env:GITHUB_ENV -Value "target_directory=$TARGET_DIRECTORY"
+
+    # プルリクエストに変更/追加されたディレクトリをコメント
+    - name: Comment on pull request
+      uses: peter-evans/create-or-update-comment@v3
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        body: |
+          The following directories have been modified or added in this pull request:
+          ${{ env.target_directory }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+
