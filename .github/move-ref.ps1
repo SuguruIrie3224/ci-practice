@@ -1,7 +1,7 @@
 # $PSDefaultParameterValues['*:Encording'] = 'utf8'
 # 引数の受け取り
 param(
-    [int]$pullnumber,
+    [int]$pullnumber
 )
 
 New-Item -ItemType Directory -Path "G:\\マイドライブ\\Share\\${pullnumber}" -Force
