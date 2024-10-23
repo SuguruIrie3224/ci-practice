@@ -21,17 +21,21 @@ jobs:
       id: changed-files
       uses: tj-actions/changed-files@v45
 
-    # 変更ファイルのディレクトリ名を取得
+    # 変更されたファイルのあるディレクトリ名(Assets/Resources/Characters/BlueArchive/CharacterNameにあるCharacterName)を取得
     - name: Get directory name
       id: get_directory_name
+      shell: powershell
       env:
         ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
       run: |
-        $allChangedFiles = $env:ALL_CHANGED_FILES -split "`n"  # 改行で分割して配列に
-        $filesAsString = ($allChangedFiles -join ",")  # カンマで結合して文字列に
-        Write-Host "Files as string: $filesAsString"
-
-        Add-Content -Path $env:GITHUB_ENV -Value "changed_files=$filesAsString"
+        $changed_files = $env:ALL_CHANGED_FILES -split '\r?\n'
+        $changed_directories = @()
+        foreach ($file in $changed_files) {
+          $directory = [System.IO.Path]::GetDirectoryName($file)
+          $changed_directories += $directory
+        }
+        $changed_directories = $changed_directories | Sort-Object -Unique
+        Add-Content -Path $env:GITHUB_ENV -Value "changed_directories=$changed_directories"
 
     # プルリクエストに変更/追加されたディレクトリをコメント
     - name: Comment on pull request
@@ -40,5 +44,5 @@ jobs:
         issue-number: ${{ github.event.pull_request.number }}
         body: |
           The following directories have been modified or added in this pull request:
-          ${{ env.changed_files }}
+          ${{ env.changed_directories }}
         token: ${{ secrets.GITHUB_TOKEN }}
