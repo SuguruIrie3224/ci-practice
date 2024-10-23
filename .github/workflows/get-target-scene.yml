@@ -14,7 +14,7 @@ jobs:
     steps:
     # リポジトリのチェックアウト
     - name: Checkout repository
-      uses: actions/checkout@4
+      uses: actions/checkout@3
 
     # 変更ファイルの確認
     - name: Get changed files
