@@ -17,8 +17,10 @@ jobs:
       id: commit_depth
       env:
         commits: ${{ github.event.pull_request.commits }}
-      run: echo "fetch_depth=$(( commits +1 ))" >> $GITHUB_ENV
-
+      run: | 
+        $commits = [int]$env:commits
+        $fetch_depth = $commits + 1
+        Add-Content -Path $env:GITHUB_ENV -Value "fetch_depth=$fetch_depth"
 
     # リポジトリのチェックアウト
     - name: Checkout repository
