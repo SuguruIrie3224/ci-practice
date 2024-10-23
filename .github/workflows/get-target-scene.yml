@@ -17,7 +17,8 @@ jobs:
     - name: Get modified or added directory
       id: get_target_directory
       run: |
-        $TARGET_DIRECTORY = git diff --name-only $env:GITHUB_EVENT_BEFORE $env:GITHUB_SHA | Select-String -Pattern 'Assets/Resources/Characters|Assets/Resources/Props' | ForEach-Object { Split-Path $_.Line }
+
+        $TARGET_DIRECTORY = git diff --name-only origin/develop ${{ github.head_ref }} | Select-String -Pattern 'Assets/Resources/Characters|Assets/Resources/Props' | ForEach-Object { Split-Path $_.Line }
 
         if (-not $TARGET_DIRECTORY) {
             Write-Host "No directory found in the modified or added files."
@@ -36,4 +37,3 @@ jobs:
           The following directories have been modified or added in this pull request:
           ${{ env.target_directory }}
         token: ${{ secrets.GITHUB_TOKEN }}
-
