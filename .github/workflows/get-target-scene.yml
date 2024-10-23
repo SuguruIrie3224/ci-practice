@@ -21,7 +21,7 @@ jobs:
       id: changed-files
       uses: tj-actions/changed-files@v45
 
-    # 変更されたファイルのあるディレクトリ名(Assets/Resources/Characters/BlueArchive/CharacterNameにあるCharacterName)を取得
+    # 変更されたファイルのあるディレクトリ名(Assets/Resources/Characters/BlueArchive/CharacterName/DirectoryName/filename.*にあるCharacterName)を取得
     - name: Get directory name
       id: get_directory_name
       shell: powershell
@@ -31,8 +31,10 @@ jobs:
         $changed_files = $env:ALL_CHANGED_FILES -split '\r?\n'
         $changed_directories = @()
         foreach ($file in $changed_files) {
-          $directory = [System.IO.Path]::GetDirectoryName($file)
-          $changed_directories += $directory
+          $directory = $file -replace 'Assets/Resources/Characters/BlueArchive/([^/]+)/.*', '$1'
+          if ($directory -ne $file) {
+            $changed_directories += $directory
+          }
         }
         $changed_directories = $changed_directories | Sort-Object -Unique
         Add-Content -Path $env:GITHUB_ENV -Value "changed_directories=$changed_directories"
