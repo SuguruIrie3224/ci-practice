@@ -3,6 +3,9 @@ name: Get modified or added directory
 on:
   pull_request:
     types: [opened]
+    paths:
+      - ['Assets/Resources/Characters/**']
+      
 
 jobs:
   get_target_scene:
@@ -12,9 +15,9 @@ jobs:
     # プルリクエストにおけるコミットの深さの計算
     - name: Get commit depth
       id: commit_depth
-      run: echo "fetch_depth=$(( commits +1 ))" >> $GITHUB_ENV
       env:
         commits: ${{ github.event.pull_request.commits }}
+      run: echo "fetch_depth=$(( commits +1 ))" >> $GITHUB_ENV
 
 
     # リポジトリのチェックアウト
