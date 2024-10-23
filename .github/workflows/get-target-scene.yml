@@ -31,7 +31,7 @@ jobs:
         $changed_files = $env:ALL_CHANGED_FILES -split '\r?\n'
         $changed_directories = @()
         foreach ($file in $changed_files) {
-            $directory = $file -replace 'Assets/Resources/Characters/BlueArchive/([^/]+)/([^/]+)/.*', '$1/$2'
+            $directory = $file -replace 'Assets[\\/]+Resources[\\/]+Characters[\\/]+BlueArchive[\\/]+([^\\/]+)[\\/]+([^\\/]+).*', '$1/$2'
             $changed_directories += $directory
         }
 
