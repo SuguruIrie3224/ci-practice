@@ -9,9 +9,19 @@ jobs:
     runs-on: self-hosted
 
     steps:
+    # プルリクエストにおけるコミットの深さの計算
+    - name: Get commit depth
+      id: commit_depth
+      run: echo "fetch_depth=$(( commits +1 ))" >> $GITHUB_ENV
+      env:
+        commits: ${{ github.event.pull_request.commits }}
+
+
     # リポジトリのチェックアウト
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        fetch-depth: ${{ env.fetch_depth }}
 
     # 変更されたまたは追加された、Assets/Resources/CharactersかAssets/Resources/Props以下のディレクトリを取得
     - name: Get modified or added directory
