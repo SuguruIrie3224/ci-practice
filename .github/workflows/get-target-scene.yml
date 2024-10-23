@@ -3,8 +3,8 @@ name: Get modified or added directory
 on:
   pull_request:
     types: [opened]
-    # paths:
-    #   - ['Assets/Resources/Characters/**']
+    paths:
+      - ['Assets\Resources\Characters\**']
       
 
 jobs:
