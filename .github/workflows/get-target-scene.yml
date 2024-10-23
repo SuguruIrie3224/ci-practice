@@ -3,7 +3,6 @@ name: Get modified or added directory
 on:
   pull_request:
     types: [opened]
-    paths: ['Assets/Resources/Characters/**']
       
 
 jobs:
@@ -30,7 +29,8 @@ jobs:
         $changed_files = $env:ALL_CHANGED_FILES -split '\r?\n'
         $changed_directories = @()
         foreach ($file in $changed_files) {
-            $directory = $file -replace 'Assets[\\/]+Resources[\\/]+Characters[\\/]+BlueArchive[\\/]+([^\\/]+)[\\/]+([^\\/]+).*', '$1/$2'
+            $file_trimmed = $file -replace 'Assets\\Resources\\Characters\\BlueArchive\\', ''
+            $directory = $file_trimmed -split '\\' | Select-Object -First 1
             $changed_directories += $directory
         }
 
