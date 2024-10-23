@@ -12,36 +12,26 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    # プルリクエストにおけるコミットの深さの計算
-    - name: Get commit depth
-      id: commit_depth
-      env:
-        commits: ${{ github.event.pull_request.commits }}
-      run: | 
-        $commits = [int]$env:commits
-        $fetch_depth = $commits + 1
-        Add-Content -Path $env:GITHUB_ENV -Value "fetch_depth=$fetch_depth"
-
     # リポジトリのチェックアウト
     - name: Checkout repository
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: ${{ env.fetch_depth }}
+      uses: actions/checkout@4
 
-    # 変更されたまたは追加された、Assets/Resources/CharactersかAssets/Resources/Props以下のディレクトリを取得
-    - name: Get modified or added directory
-      id: get_target_directory
+    # 変更ファイルの確認
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v45
+
+    # 変更ファイルのディレクトリ名を取得
+    - name: Get directory name
+      id: get_directory_name
+      env:
+        ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
       run: |
+        $allChangedFiles = $env:ALL_CHANGED_FILES -split "`n"  # 改行で分割して配列に
+        $filesAsString = ($allChangedFiles -join ",")  # カンマで結合して文字列に
+        Write-Host "Files as string: $filesAsString"
 
-        $TARGET_DIRECTORY = git diff origin/develop...origin/${{ github.head_ref }} --name-only | Select-String -Pattern 'Assets/Resources/Characters|Assets/Resources/Props' | ForEach-Object { Split-Path $_.Line }
-
-        if (-not $TARGET_DIRECTORY) {
-            Write-Host "No directory found in the modified or added files."
-            exit 1
-        }
-
-        $env:TARGET_DIRECTORY = $TARGET_DIRECTORY
-        Add-Content -Path $env:GITHUB_ENV -Value "target_directory=$TARGET_DIRECTORY"
+        Add-Content -Path $env:GITHUB_ENV -Value "changed_files=$filesAsString"
 
     # プルリクエストに変更/追加されたディレクトリをコメント
     - name: Comment on pull request
@@ -50,5 +40,5 @@ jobs:
         issue-number: ${{ github.event.pull_request.number }}
         body: |
           The following directories have been modified or added in this pull request:
-          ${{ env.target_directory }}
+          ${{ env.changed_files }}
         token: ${{ secrets.GITHUB_TOKEN }}
