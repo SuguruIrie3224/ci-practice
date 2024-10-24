@@ -37,12 +37,19 @@ jobs:
         $changed_directories = $changed_directories | Sort-Object -Unique
         Add-Content -Path $env:GITHUB_ENV -Value "changed_directories=$changed_directories"
 
-    # Unityエディタ再生を実行するシーンのパスを取得
-    - name: Execute Unity Editor Play
+    # Unityエディタ再生を実行
+    - name: Execute Unity Editor Play and Record a Video
       run: |
         $changed_directories = $env:changed_directories
         foreach ($directory in $changed_directories) {
             .github/auto-record.ps1 "Assets/Resources/Characters/BlueArchive/$directory/Scenes/SetupScene.unity"
+        }
+    
+    - name: Execute Unity Editor Play and Take a picture
+      run: |
+        $changed_directories = $env:changed_directories
+        foreach ($directory in $changed_directories) {
+            .github/auto-record-pic.ps1 "Assets/Resources/Characters/BlueArchive/$directory/Scenes/SetupScene.unity"
         }
 
     # 書き出したファイルの移動
