@@ -10,7 +10,7 @@ $unityPath = "C:\Program Files\Unity\Hub\Editor\2023.2.19f1\Editor\Unity.exe"  #
 $projectPath = "C:\Users\suguru irie\ProjectBlueArchive"
 
 # 実行する静的メソッド
-$executeMethod = "ModelReferenceRecorder.LoadSceneFromCommandLine"
+$executeMethod = "ModelReferenceRecorder.TakeCheckBustup"
 
 # Unityの実行コマンドを作成
 $arguments = "-projectPath `"$projectPath`" -executeMethod `"$executeMethod`" -scene `"$scenePath`" "
