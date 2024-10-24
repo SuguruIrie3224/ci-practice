@@ -1,10 +1,7 @@
-name: Just Checkout with condition
+name: Just Checkout
 
 on:
   workflow_dispatch:
-  pull_request:
-    types: [opened]
-    paths: ['Assets\Resources\Characters\BlueArchive\**', 'Assets/Resources/Characters/BlueArchive/**']
     
 jobs:
   run-ls:
